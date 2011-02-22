@@ -19,7 +19,7 @@ namespace QSemanticDB
   class SchedulerDebugVisualizer
   {
   public:
-    SchedulerDebugVisualizer(SemanticDBImplementation& db, Scheduler& scheduler) : db(db), scheduler(scheduler), count(0) {}
+    SchedulerDebugVisualizer(SemanticDBImplementation& db, Scheduler& scheduler) : db(db), scheduler(scheduler), printRed(false), count(0), subgraphCounter(0), visitor(0) {}
 
     void Print(const char* title);
     void Print(const char* title, Scheduler::Visitor &visitor);
