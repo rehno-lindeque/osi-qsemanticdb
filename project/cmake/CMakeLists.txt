@@ -15,6 +15,8 @@ else()
    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None Debug Release.")
 endif()
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "../../lib" CACHE STRING "The directory where static libraries will be placed.")
+
 set(SEMANTICDB_API_LANGUAGE "C" CACHE STRING "Choose the export language to use, options are: CPP C.")
 
 project(qsemanticdb)
