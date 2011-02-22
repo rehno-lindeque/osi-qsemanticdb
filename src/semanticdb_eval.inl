@@ -173,9 +173,14 @@ namespace QSemanticDB
       bool result = EvalSelectionConjunct(symbol);
       QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_After_SelectionConjunct")
       //if(result != OSIX::SEMANTICID_INVALID)
-      if(result)
+#ifdef _DEBUG
+      evalQueryStack.pop_back();
+#else
+      evalQueryStack.pop();
+#endif
+      /*if(result)
       {
-        /*// TODO: FIX THIS. ActiveQueueSize should not be 0
+        / * // TODO: FIX THIS. ActiveQueueSize should not be 0
         if (scheduler.activeQueue.size()==0)
         {
           QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("TODO: This is a bug, we should not be able to reach this point" << std::endl)
@@ -194,21 +199,16 @@ namespace QSemanticDB
         QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("ActiveQueueSize = " << scheduler.activeQueue.size() << std::endl)
         if(scheduler.activeQueue.size() > 0)
           QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("ActiveQueryDepth = " << scheduler.activeQueue.back()->QueryDepth() << std::endl)
-        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_Commit")*/
-#ifdef _DEBUG
-        evalQueryStack.pop_back();
-#else
-        evalQueryStack.pop();
-#endif
+        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_Commit")* /
         return true;
-      }
+      }//*/
 
       // Check whether an assertion error message should be triggered
       //if(result == OSIX::SEMANTICID_INVALID && properties.query == QuerySelectionStrictConjunct)
       if(!result && properties.query == QuerySelectionStrictConjunct)
       {
         //errorStream << "TODO: Assertion failed...";
-        infoStream << " TODO: Assertion failed...";
+        infoStream << " TODO: Assertion failed... (Strict conjunct selection)";
       }
     }
     else if(properties.query == QueryMutationConjunct || properties.query == QueryMutationStrictConjunct)
@@ -219,15 +219,16 @@ namespace QSemanticDB
         QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT(" (STRICT)")
 #endif
     }
+    /*OLD: WHY?? This probably shouldn't be here since the scheduler rolls back during evaluation of the query...
     // Roll back the evaluation if the query did not succeed
-    QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("Rollback..." << std::endl)
+    QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("Rollback..." << std::endl)    
     scheduler.Rollback();
 #ifdef _DEBUG
     evalQueryStack.pop_back();
 #else
     evalQueryStack.pop();
-#endif
-    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_Rollback")
+#endif//*/
+    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("EvalIfQuery_QueryDone", "The query is finished, so it was removed from the query stack.\\nIt may have failed or it may have succeeded...")
     return true;
   }
 
@@ -454,7 +455,7 @@ namespace QSemanticDB
       if(evalId == OSIX::SEMANTICID_INVALID)
       {
         QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("EvalInternalUntil_Before_Rollback" << std::endl)
-        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2("EvalInternalUntil_Before_Rollback", "It was found that this branch doesn't correspond with the query argument!\\nRolling back to the next branch or until the query can't be resolved...", visitor)
+        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2("EvalInternalUntil_Before_Rollback", "It was found that this branch doesn't correspond with the query argument!\\nRolling back to the next branch or until it is clear that the query can't be resolved...", visitor)
 
         scheduler.Rollback();
         visitor = scheduler.GetVisitor();
@@ -475,7 +476,7 @@ namespace QSemanticDB
         result = true;
         scheduler.Commit();
 
-        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR("EvalInternalUntil_AfterCommit", visitor)
+        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2("EvalInternalUntil_AfterCommit", "The query argument was found in the current branch and has been committed", visitor)
 
         // TODO: Is this correct?
         if (scheduler.activeQueue.empty())
@@ -488,6 +489,11 @@ namespace QSemanticDB
           break;
       }
     }
+    
+    // TODO: IS THIS CORRECT?
+    // Whether the query succeeded or failed, it is now finished. Hence decrease the query depth
+    --scheduler.queryDepth;
+    
     return result;
   }
 

@@ -70,10 +70,13 @@ namespace QSemanticDB
     activeQueue.back()->Clear();
     if (activeQueue.size() > 1)
     {
-      // TODO: this function does not work correctly
-      // TODO: cannot use remove "First" branch because we're not necessarily at the first branch
-      schedule.RemoveFirstLeafBranch(activeQueue.back());
-      OSI_ASSERT(false);
+      auto rollbackQueue = activeQueue.back();
+      auto prevSize = activeQueue.size();
+      activeQueue.pop_back();
+      OSI_ASSERT(activeQueue.size() < prevSize);
+    
+      // TODO: this function does not work correctly (does it now???? Check this...)
+      schedule.RemoveLeafBranch(activeQueue.back(), rollbackQueue);
     }
     else if (schedule.RootBranches() > 1)
     {
@@ -81,8 +84,6 @@ namespace QSemanticDB
       //schedule.CollapseFirstRootBranch();
       OSI_ASSERT(false);
     }
-
-    activeQueue.pop_back();
 
     // If there are no more queues left, then return
     if(activeQueue.empty())
@@ -183,7 +184,8 @@ namespace QSemanticDB
   Scheduler::Visitor Scheduler::GetVisitor()
   {
     // Pre-condition: Current branch must have at least 1 symbol
-    OSI_ASSERT(activeQueue.size() > 1 && activeQueue.back()->Size() > 0);
+    //OLD: OSI_ASSERT(activeQueue.size() > 1 && activeQueue.back()->Size() > 0);
+    OSI_ASSERT(activeQueue.size() > 0 && activeQueue.back()->Size() > 0);
     return Visitor(*this, activeQueue.size()-1, activeQueue.back()->Size()-1);
   }
 

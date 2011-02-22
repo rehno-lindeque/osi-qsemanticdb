@@ -37,7 +37,8 @@ namespace QSemanticDB
   void ScheduleQueue::Commit()
   {
     OSI_ASSERT(queryDepth > 0);
-    --queryDepth;
+    // TODO: Not sure about this, does query depth need to be incremented again for the next branch..???
+    --queryDepth; 
   }
 
   SemanticId ScheduleQueue::Front() const
@@ -206,12 +207,15 @@ namespace QSemanticDB
     }
   }
 
-  void Schedule::RemoveFirstLeafBranch(const TreeIterator& iBranch)
+  void Schedule::RemoveLeafBranch(const TreeIterator& iParentBranch, const TreeIterator& iLeafBranch)
   {
     // Pre-condition: This must be a leaf branch, hence must have no inner or outer branches
-    OSI_ASSERT(iBranch->InnerBranches() == 0 && iBranch->OuterBranches() == 0);
-    DeallocQueue(iBranch->queue);
-    tree.erase(iBranch);
+    OSI_ASSERT(iLeafBranch->InnerBranches() == 0 && iLeafBranch->OuterBranches() == 0);
+    DeallocQueue(iLeafBranch->queue);
+    tree.erase(iLeafBranch);
+    
+    //todo: is this correct...??
+    --iParentBranch->nOuterBranches;
   }
 
   void Schedule::PopFront()

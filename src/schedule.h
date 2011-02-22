@@ -91,7 +91,7 @@ namespace QSemanticDB
     //TreeIterator InsertBranch(TreeIterator iBranch);
     TreeIterator InsertInnerBranch(TreeIterator iBranch);
     TreeIterator InsertOuterBranch(TreeIterator iBranch);
-    void RemoveFirstLeafBranch(const TreeIterator& iBranch);
+    void RemoveLeafBranch(const TreeIterator& iParentBranch, const TreeIterator& iLeafBranch);
     void PopFront();
 
     // Accessors
