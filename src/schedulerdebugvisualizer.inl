@@ -11,7 +11,7 @@
 
 namespace QSemanticDB
 {
-  void SchedulerDebugVisualizer::Print(const char* title)
+  void SchedulerDebugVisualizer::Print(const char* title, const char* description)
   {
     // Pre-conditions
     if(count > 99)
@@ -70,20 +70,23 @@ namespace QSemanticDB
 
 
     // Write graph title
-    fileStream << " label = \"" << title << "\";" << std::endl << "}" << std::endl;
-
+    if (description)
+      fileStream << " label = \"" << title << "\\n" << description << "\";" << std::endl << "}" << std::endl;
+    else
+      fileStream << " label = \"" << title << "\";" << std::endl << "}" << std::endl;
+    
     // Increment the file count
     ++count;
   }
 
-  void SchedulerDebugVisualizer::Print(const char* title, Scheduler::Visitor &visitor)
+  void SchedulerDebugVisualizer::Print(const char* title, const char* description, Scheduler::Visitor &visitor)
   {
     SchedulerDebugVisualizer::visitor = &visitor;
-    Print(title);
+    Print(title, description);
     SchedulerDebugVisualizer::visitor = 0;
   }
 
-  void SchedulerDebugVisualizer::PrintAtom(std::ofstream &fileStream, SemanticId atom)
+  void SchedulerDebugVisualizer::PrintAtom(std::ofstream& fileStream, SemanticId atom)
   {
     auto i = db.epsilonStrings.find(atom);
     if(i != db.epsilonStrings.end())

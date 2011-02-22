@@ -38,10 +38,14 @@
 // Debugging macros
 #ifdef QSEMANTICDB_DEBUG_VISUALIZE
 # define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE(title) schedulerDebugVisualizer.Print(title);
-# define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR(title, visitor) schedulerDebugVisualizer.Print(title, visitor);
+# define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2(title, description) schedulerDebugVisualizer.Print(title, description);
+# define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR(title, visitor) schedulerDebugVisualizer.Print(title, 0, visitor);
+# define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2(title, description, visitor) schedulerDebugVisualizer.Print(title, description, visitor);
 #else
 # define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE(title) {}
+# define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2(title, description) {}
 # define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR(title, visitor) {}
+# define QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2(title, description, visitor) {}
 #endif
 
 #ifdef QSEMANTICDB_DEBUG_VERBOSE

@@ -32,7 +32,7 @@ namespace QSemanticDB
     {
       QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalInternal_Before_EvalSymbol(" << evalId << ")" << std::endl)
       EvalSymbol(evalId);
-      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalInternal_After_EvalSymbol")
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("EvalInternal_After_EvalSymbol", "(Note: This symbol cannot be a query)\\nIf the symbol is qualified, then its unqualified codomain was added\\nto the (back of the) schedule.")
 
       // Add parent codomain edges of this id to the evaluation stack
       QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalInternal_Before_EvalScheduleDefinitions(" << evalId << ")" << std::endl)
@@ -40,7 +40,7 @@ namespace QSemanticDB
       {
         if(scheduler.OuterBranches() > 0)
           scheduler.GotoFirstBranch();
-        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalInternal_After_EvalScheduleDefinitions")
+        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("EvalInternal_After_EvalScheduleDefinitions", "If the domain corresponds (recursively) with any qualified codomains (i.e. global definitions x = ...),\\n then they were added to the (back of the) schedule.\\The scheduler also proceeds to the first branch that was added.")
         do
         {
           QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalIfQuery(" << scheduler.Get() << ')' << std::endl)
@@ -150,7 +150,7 @@ namespace QSemanticDB
 
     // Increment the scheduler's query depth
     scheduler.BeginQuery();
-    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_AfterBeginQuery")
+    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("EvalIfQuery_AfterBeginQuery", "It was found that the active symbol is a query, hence we increment the query depth by 1\\n(in order to indicate that 1 more query must be resolved before the current branch can be committed)")
 
     // Add the query to a stack
 #ifdef _DEBUG
@@ -169,8 +169,9 @@ namespace QSemanticDB
 
       // Get the domain and the unqualified codomain of the query (i.e. as an unqualified relation)
       //SemanticId result = EvalSelectionConjunct(symbol);
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("EvalIfQuery_Before_SelectionConjunct", "The query is a conjunct selection, so we will try to find a definition for a query\\nin the form (x.y) such that x = ... = y")
       bool result = EvalSelectionConjunct(symbol);
-      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_SelectionConjunct")
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_After_SelectionConjunct")
       //if(result != OSIX::SEMANTICID_INVALID)
       if(result)
       {
@@ -439,13 +440,13 @@ namespace QSemanticDB
     scheduler.Push(startSymbol);
     ++visitor.symbolIndex;
 
-    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR("EvalInternalUntil_StartSymbolAdded", visitor)
+    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2("EvalInternalUntil_StartSymbolAdded", "The start symbol (the speculative query domain) was added to the (back of the) schedule", visitor)
 
     // Evaluate each symbol following this one
     SemanticId evalId = EvalInternalNext(visitor);
     while(true)
     {
-      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR("EvalInternalUntil_Loop", visitor)
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2("EvalInternalUntil_Loop", "(Busy evaluating every symbol that follows until the query argument is found or the queue rolled back)", visitor)
       evalId = EvalInternalNext(visitor);
 
       // Test whether we are done
@@ -453,11 +454,12 @@ namespace QSemanticDB
       if(evalId == OSIX::SEMANTICID_INVALID)
       {
         QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("EvalInternalUntil_Before_Rollback" << std::endl)
+        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2("EvalInternalUntil_Before_Rollback", "It was found that this branch doesn't correspond with the query argument!\\nRolling back to the next branch or until the query can't be resolved...", visitor)
 
         scheduler.Rollback();
         visitor = scheduler.GetVisitor();
 
-        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR("EvalInternalUntil_After_Rollback", visitor)
+        QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULEVISITOR2("EvalInternalUntil_After_Rollback", "Rolled back to a different branch.\\nThe active branch was deleted...", visitor)
 
         // Check whether all codomains have now been evaluated
         // todo: Is this condition entirely complete?
@@ -566,10 +568,11 @@ namespace QSemanticDB
 #endif*/
 
     // Find an appropriate parent domain and query domain and then perform a conjunct selection to try and find the argument
-    // If the speculative domain is actually concrete, then we should simply evaluate whether it contains the
+    // If the speculative domain is actually concrete, then we should simply evaluate whether it contains the argument
     auto properties = GetProperties(querySymbol.speculativeDomain);
     if(properties.concrete)
     {
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("EvalSelectionConjunct_Before_EvalInternalUntil", "In this case the speculative domain was found to be concrete,\\nso simply search for the query argument.")
       return EvalInternalUntil(querySymbol.speculativeDomain, querySymbol.argument);
     }
 

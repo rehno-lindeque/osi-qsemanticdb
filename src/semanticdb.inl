@@ -467,8 +467,6 @@ namespace QSemanticDB
 
   SemanticId SemanticDBImplementation::Eval()
   {
-    QSEMANTICDB_DEBUG_VERBOSE_PRINT("  Eval: ")
-
     // Invariant Condition: The scheduler should always be finished with its previous iteration of work when the next iteration begins.
     OSI_ASSERT(scheduler.Done());
 
@@ -480,7 +478,7 @@ namespace QSemanticDB
       return OSIX::SEMANTICID_INVALID;
     }
 
-    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval")
+    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("Eval", "Evaluate the next symbol in the (front of the) schedule.\\nThe client has called Eval and expects an id to be returned or `invalid' if none is available.")
 
     // Fetch the next symbol to return to the evaluator from the scheduler
     //QSEMANTICDB_DEBUG_VERBOSE_PRINT("FrontFront " << schedule.Begin()->frontIndex << ' ' << schedule.Begin()->queue << ' ' << schedule.Begin()->queue->size() << " " << schedule.RootBranches() << " " << schedule.Begin()->Size() << std::endl)

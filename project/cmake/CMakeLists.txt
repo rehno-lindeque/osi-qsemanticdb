@@ -9,6 +9,7 @@
 cmake_minimum_required(VERSION 2.6) 
 
 # Cacheable options
+
 if(DEFINED CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Choose the type of build, options are: None Debug Release.")
 else()
