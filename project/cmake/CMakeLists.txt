@@ -57,4 +57,5 @@ endif()
 
 include_directories(../../src  ../../../../api ../../../base/src ../../../basesemanticdb/src)
 set_source_files_properties(../../src/api.cpp COMPILE_FLAGS "-std=c++0x -Wall")
-add_library(${SEMANTICDB_LIBRARY_NAME} STATIC ../../src/api.cpp)
+set_source_files_properties(../../../basesemanticdb/src/capi.cpp COMPILE_FLAGS "-Wall")
+add_library(${SEMANTICDB_LIBRARY_NAME} STATIC ../../src/api.cpp ../../../basesemanticdb/src/basesemanticdb/capi.cpp)
