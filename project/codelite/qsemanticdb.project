@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="qsemanticdb" InternalType="">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00020001N0005Debug0000000000000001N0004Main000000000000]]>
+    </Plugin>
+  </Plugins>
+  <VirtualDirectory Name="project">
+    <VirtualDirectory Name="make">
+      <File Name="../make/Makefile"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="scons">
+      <File Name="../scons/SConscriptTests"/>
+      <File Name="../scons/SConscript"/>
+      <File Name="../scons/CommonSConstruct"/>
+      <File Name="../scons/SConstruct"/>
+      <File Name="../scons/CommonSConscript"/>
+      <File Name="../scons/SConstargetscript"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="cmake">
+      <File Name="../cmake/CMakeLists.txt"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="../../src/semanticdb.h"/>
+    <File Name="../../src/schedule.h"/>
+    <File Name="../../src/types.h"/>
+    <File Name="../../src/scheduler.h"/>
+    <File Name="../../src/functors.h"/>
+    <File Name="../../src/api.cpp"/>
+    <File Name="../../src/api.h"/>
+    <File Name="../../src/schedulerdebugvisualizer.h"/>
+    <File Name="../../src/scheduler.inl"/>
+    <File Name="../../src/schedulerdebugvisualizer.inl"/>
+    <File Name="../../src/semanticdb_build.inl"/>
+    <File Name="../../src/semanticdb.inl"/>
+    <File Name="../../src/schedule.inl"/>
+    <File Name="../../src/semanticdb_eval.inl"/>
+    <File Name="../../src/api.inl"/>
+    <File Name="../../src/semanticdb_debug.inl"/>
+    <File Name="../../src/apidbg.inl"/>
+    <File Name="../../src/semanticdb_accessors.inl"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="tests">
+    <File Name="../../tests/testschedulequeue.cpp"/>
+    <File Name="../../tests/testcommon.h"/>
+    <File Name="../../tests/testscheduler.cpp"/>
+    <File Name="../../tests/testsemanticdb.cpp"/>
+    <File Name="../../tests/testschedule.cpp"/>
+    <File Name="../../tests/.gitignore"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="qsemanticdb">
+    <File Name="../../README"/>
+    <File Name="../../.gitignore"/>
+  </VirtualDirectory>
+  <Settings Type="Dynamic Library">
+    <Configuration Name="Main" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        <RebuildCommand/>
+        <CleanCommand>make clean</CleanCommand>
+        <BuildCommand>make</BuildCommand>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory>$(ProjectPath)/../cmake</WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+</CodeLite_Project>
