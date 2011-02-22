@@ -467,7 +467,7 @@ namespace QSemanticDB
 
   SemanticId SemanticDBImplementation::Eval()
   {
-    QSEMANTICDB_DEBUG_VERBOSE_PRINT(infoStream << "  Eval: ")
+    QSEMANTICDB_DEBUG_VERBOSE_PRINT("  Eval: ")
 
     // Invariant Condition: The scheduler should always be finished with its previous iteration of work when the next iteration begins.
     OSI_ASSERT(scheduler.Done());
