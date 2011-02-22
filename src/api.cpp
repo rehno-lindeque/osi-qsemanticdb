@@ -19,7 +19,7 @@
 /*                                 INCLUDES                                 */
 #include "api.h"
 
-#ifndef OSI_STATIC_C_BUILD
+#ifndef OSI_C_STATIC_BUILD
 # include "api.inl"
 # ifdef _DEBUG
 #   include "apidbg.inl"
