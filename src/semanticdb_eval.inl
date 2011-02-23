@@ -56,7 +56,6 @@ namespace QSemanticDB
       }
       return;
     }
-
     // Evaluate a query (speculative symbols should never be evaluated here...)
     OSI_ASSERT(i->second.query != QueryNone && i->second.concrete);
     //QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalIfQuery" << std::endl)
@@ -144,7 +143,7 @@ namespace QSemanticDB
       // (todo: unless we are currently in a query?)
       //QSEMANTICDB_DEBUG_EVALOUTPUT_PRINT("Commit..." << std::endl)
       //scheduler.Commit();
-      //QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("EvalIfQuery_Commit")
+      //QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("EvalIfQuery_QueryNone", "Not a query")
       return false;
     }
 

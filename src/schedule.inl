@@ -259,7 +259,7 @@ namespace QSemanticDB
       return;//*/
 
     // Found a branch that can be popped
-    //  Invariant Condition: No branch may have 0 symbols since such a branch is immediately removed from the tree unless it is the only remaining branch.
+    // Invariant Condition: No branch may have 0 symbols since such a branch is immediately removed from the tree unless it is the only remaining branch.
     OSI_ASSERT(!iTree->Empty() && !Empty());
     iTree->PopFront();
     /*if(iTree->Empty())

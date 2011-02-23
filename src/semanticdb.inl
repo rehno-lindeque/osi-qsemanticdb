@@ -467,8 +467,8 @@ namespace QSemanticDB
 
   SemanticId SemanticDBImplementation::Eval()
   {
-    // Invariant Condition: The scheduler should always be finished with its previous iteration of work when the next iteration begins.
-    OSI_ASSERT(scheduler.Done());
+    // OLD: Invariant Condition: The scheduler should always be finished with its previous iteration of work when the next iteration begins.
+    //OSI_ASSERT(scheduler.Done());
 
     // If the schedule is empty we are done
     if(schedule.Empty())
@@ -493,15 +493,17 @@ namespace QSemanticDB
       // Invariant Condition: When the branch only has one symbol and no branches, then Front() (i.e. the next symbol to return to the evaluator) is the same as Back() (i.e. the next symbol to evaluate internally).
       //OSI_ASSERT(schedule.Front() == scheduler.Back());
       EvalInternal(evalId);
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("Eval_After_EvalInternal", "..?")
       scheduler.Commit(); // Commit the first queue... (todo: This is a bit of a hack now to avoid the case where no query was evaluated, only the next symbol was retrieved. Then the result must still be commited)
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE2("Eval_After_Commit", "..?")
     }
 
     // Remove the symbol to be returned from the schedule
     //QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_BeforePopFront")
     schedule.PopFront();
-    //QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_AfterPopFront")
+    QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_AfterPopFront")
 
-    QSEMANTICDB_DEBUG_VERBOSE_PRINT('(' << evalId << ')' << std::endl)
+    QSEMANTICDB_DEBUG_VERBOSE_PRINT("Eval result = (" << evalId << ')' << std::endl)
     return evalId;
   }
 
