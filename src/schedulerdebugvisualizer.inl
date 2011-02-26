@@ -27,8 +27,8 @@ namespace QSemanticDB
 
     // Write graph data
     fileStream << "digraph G {" << std::endl;
-    //fileStream << "  rankdir=TB;" << std::endl;
-    fileStream << "  rankdir=LR;" << std::endl;
+    //fileStream << " rankdir=TB;" << std::endl;
+    fileStream << " rankdir=LR;" << std::endl;
 
     auto iEvalStack = scheduler.activeQueue.begin();
     auto iTree = scheduler.schedule.Begin();
@@ -36,21 +36,32 @@ namespace QSemanticDB
     for(int rootBranchIndex = 0; rootBranchIndex < scheduler.schedule.RootBranches(); ++rootBranchIndex)
     {
       // Subgraph
+      if(!printRed && iTree == *iEvalStack)
+      {
+        fileStream << " color=red;" << std::endl;
+        printRed = true;
+        ++iEvalStack;
+      }
+      else if(printRed && iTree != *iEvalStack)
+      {
+        fileStream << " color=black;" << std::endl;
+        printRed = false;
+      }
       fileStream << " subgraph clusterRootSG" << subgraphCounter << " {" << std::endl;
       ++subgraphCounter;
 
       // Queue
-      if(!printRed && iTree == *iEvalStack)
+      /*if(!printRed && iTree == *iEvalStack)
       {
         fileStream << "  node [color=red fontcolor=red];" << std::endl;
         printRed = true;
         ++iEvalStack;
       }
       else if(printRed && iTree != *iEvalStack)
-      {
+      {*/
         fileStream << "  node [color=black fontcolor=black];" << std::endl;
-        printRed = false;
-      }
+        /*printRed = false;
+      }*/
 
       PrintQueue(fileStream, iTree);
       fileStream << " }" << std::endl; // close subgraph
@@ -186,22 +197,33 @@ namespace QSemanticDB
         return;
 
       // Subgraph
+      if(!printRed && iTree == *iEvalStack)
+      {
+        fileStream << " color=red;" << std::endl;
+        printRed = true;
+        ++iEvalStack;
+      }
+      else if(printRed && iTree != *iEvalStack)
+      {
+        fileStream << " color=black;" << std::endl;
+        printRed = false;
+      }
       fileStream << " subgraph clusterSG" << subgraphCounter << " {" << std::endl;
       ++subgraphCounter;
 
       // Queue
       auto branch = *iBranch;
-      if(!printRed && iTree == *iEvalStack)
+      /*if(!printRed && iTree == *iEvalStack)
       {
         fileStream << "  node [color=red fontcolor=red];" << std::endl;
         printRed = true;
         ++iEvalStack;
       }
       else if(printRed && iTree != *iEvalStack)
-      {
+      {*/
         fileStream << "  node [color=black fontcolor=black];" << std::endl;
-        printRed = false;
-      }
+        /*printRed = false;
+      }*/
       PrintQueue(fileStream, iBranch);
       fileStream << " }" << std::endl; // close subgraph
 
