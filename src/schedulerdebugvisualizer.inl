@@ -261,7 +261,7 @@ namespace QSemanticDB
       }
       auto scheduleQueue = **iQueue;
       fileStream << "<TD>" << scheduleQueue.QueryDepth() << "</TD>";
-      for(size_t c = scheduleQueue.FrontIndex(); c < scheduleQueue.Size(); ++c)
+      for(size_t c = scheduleQueue.FrontIndex(); c < scheduleQueue.EndIndex(); ++c)
       {
         fileStream << "<TD>";
         InternPrintSymbol(fileStream, scheduleQueue[c]);
