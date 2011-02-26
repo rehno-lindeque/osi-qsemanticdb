@@ -59,17 +59,7 @@ namespace QSemanticDB
       ++subgraphCounter;
 
       // Queue
-      /*if(!printRed && iTree == *iEvalStack)
-      {
-        fileStream << "  node [color=red fontcolor=red];" << std::endl;
-        printRed = true;
-        ++iEvalStack;
-      }
-      else if(printRed && iTree != *iEvalStack)
-      {*/
-        fileStream << "  node [color=black fontcolor=black];" << std::endl;
-        /*printRed = false;
-      }*/
+      fileStream << "  node [color=black fontcolor=black];" << std::endl;
 
       PrintQueue(fileStream, iTree);
       fileStream << " }" << std::endl; // close subgraph
@@ -221,17 +211,7 @@ namespace QSemanticDB
 
       // Queue
       auto branch = *iBranch;
-      /*if(!printRed && iTree == *iEvalStack)
-      {
-        fileStream << "  node [color=red fontcolor=red];" << std::endl;
-        printRed = true;
-        ++iEvalStack;
-      }
-      else if(printRed && iTree != *iEvalStack)
-      {*/
-        fileStream << "  node [color=black fontcolor=black];" << std::endl;
-        /*printRed = false;
-      }*/
+      fileStream << "  node [color=black fontcolor=black];" << std::endl;
       PrintQueue(fileStream, iBranch);
       fileStream << " }" << std::endl; // close subgraph
 
