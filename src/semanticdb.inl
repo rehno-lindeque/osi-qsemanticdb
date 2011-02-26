@@ -518,7 +518,7 @@ namespace QSemanticDB
     }
     schedule.PopFront();
     QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_AfterPopFront")
-
+    
     QSEMANTICDB_DEBUG_VERBOSE_PRINT("Eval result = (" << evalId << ')' << std::endl)
     return evalId;
   }

@@ -368,35 +368,37 @@ namespace QSemanticDB
       if(iBranch != Begin())
       {
         // Find the previous branch
-        auto iPrevBranch = Begin();
+        auto iPrevBranch = Begin(); 
         while(iPrevBranch->Sibling() != iBranch)
         {
           OSI_ASSERT(iPrevBranch != End());
-          ++iPrevBranch;
+          iPrevBranch = iPrevBranch->Sibling();
         }
         // Re-assign the previous branch's sibling
         iPrevBranch->iSibling = iChildBranch;
       }
       
       // Reassign the last child branch's sibling
-      if(iBranch->TotalBranches() > 0)
+      if(iBranch->TotalBranches() > 0 && iBranch->Sibling() != End())
       {
-        auto iLastChild = iChildBranch;
-        while (iChildBranch != End())
-        {
-          iLastChild = iChildBranch;
-          ++iChildBranch;
-        }
-        OSI_ASSERT(iLastChild->Sibling() == End());
-        iLastChild->iSibling = iBranch->Sibling();
+        while(iChildBranch->Sibling() != End())
+          iChildBranch = iChildBranch->Sibling();
+        iChildBranch->iSibling = iBranch->Sibling();
+        OSI_ASSERT(iChildBranch->Sibling() != End());
       }
     }
-    
+        
     // Remove the root branch from the tree
     nRootBranches -= 1;
     nRootBranches += iBranch->TotalBranches();
     DeallocQueue(iBranch->queue);
     tree.erase(iBranch);
+    
+    /* Post-condition: Number of root branches should coincide with the linked-list data
+    int nRoots = 0;
+    for(auto i = Begin(); i != End(); i = i->Sibling())
+      ++nRoots;
+    OSI_ASSERT(nRoots == nRootBranches);//*/
   }
 
   void Schedule::DeallocQueue(SymbolQueue *queue)
