@@ -12,6 +12,39 @@
     DESCRIPTION:
       A schedule for evaluating queries and definitions. Implemented as a
       tree-like queue with commit and rollback actions.
+       
+      A ScheduleQueue has a linked-list structure that looks like this:
+      
+      Queue (parent)
+      . \
+      .  Queue (leaf node)
+      .  .|
+      .  Queue (child)
+      .    \ 
+      .     Queue (leaf node)
+      .     .|
+      .     Queue (leaf node)
+      .    /
+      .   /
+      Queue (sibling)
+      
+      The dotted lines mean that the queue is connected as a sibling, while the
+      solid lines mean that queues are connected using the regular linked list
+      structure.
+       
+      TRAVERSING ONLY DIRECT DESCENDANTS:
+      
+      Traverse the direct descendants of a branch by FIRST
+      CHECKING WHETHER THE BRANCH HAS ANY CHILDREN, then fetching the
+      first child (using ++iBranch) and then using the Sibling() function until
+      Sibling() returns the tree's end() iterator.
+      Alternatively you can also ask for the number of branches and then use
+      that as an upper limit for a counter when iterating using Sibling().
+      
+      TODO: Can't remember exactly how inner and outer branches work but
+            basically the one classification is simply stored before the other
+            in the linked list (and then simply use n[Inner/Outer]Branches to
+            traverse one or the other)
 */
 namespace QSemanticDB
 {
@@ -47,6 +80,7 @@ namespace QSemanticDB
     //int Branches() const;
     int InnerBranches() const;
     int OuterBranches() const;
+    int TotalBranches() const;
     int QueryDepth() const;
     void QueryDepth(int depth);
     const TreeIterator& Sibling();
@@ -132,14 +166,15 @@ namespace QSemanticDB
     //void PopRoot();
 
     // Collapse the first branch in the root of the tree (replace it by its child branches)
-    void CollapseFirstRootBranch();
+    // OLD: void CollapseFirstRootBranch();
 
     // Collapse any branch in the root of the tree (replace it by its child branches)
-    // Note: We're avoiding deleting any root branch since it is expensive to update the previous sibling in the list since the list is only singly-linked
+    // Note: We prefer to avoid deleting any root branch since it is expensive to update the previous sibling in the list since the list is only singly-linked
     //       However, if we start evaluating branches concurrently this functionality will become necessary
-    //void CollapseRootBranch(TreeIterator iBranch);
+    //       There is no real penalty for the first branch as it has no previous node.
+    void CollapseRootBranch(TreeIterator iBranch);
 
-    // Memory allocation
+    // Memory allocation (deallocation actually returns a queue to a memory pool)
     SymbolQueue *AllocQueue();
     void DeallocQueue(SymbolQueue *queue);
   };

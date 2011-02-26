@@ -79,6 +79,11 @@ namespace QSemanticDB
   {
     return nOuterBranches;
   }
+  
+  int ScheduleQueue::TotalBranches() const
+  {
+    return InnerBranches() + OuterBranches();
+  }
 
   int ScheduleQueue::QueryDepth() const
   {
@@ -262,11 +267,13 @@ namespace QSemanticDB
     // Invariant Condition: No branch may have 0 symbols since such a branch is immediately removed from the tree unless it is the only remaining branch.
     OSI_ASSERT(!iTree->Empty() && !Empty());
     iTree->PopFront();
-    /*if(iTree->Empty())
+    if(iTree->Empty() && (RootBranches() > 1 || iTree->TotalBranches() > 0))
+    {
       CollapseRootBranch(iTree);    // (If the branch is empty, it should be replaced by its child branches)*/
+    }
 
-    if(RootBranches() > 0 && iTree->Empty() && iTree->OuterBranches() > 0)
-      CollapseFirstRootBranch();
+    /*OLD: if(RootBranches() > 0 && iTree->Empty() && iTree->OuterBranches() > 0)
+      CollapseFirstRootBranch();*/
 
 
     /*
@@ -306,6 +313,8 @@ namespace QSemanticDB
 
   bool Schedule::Empty() const
   {
+    // Pre-condition: There should always be at least one branch, even if it is empty
+    OSI_ASSERT(RootBranches() != 0);
     return RootBranches() == 1 && Begin()->Size() == 0;
   }
 
@@ -325,7 +334,7 @@ namespace QSemanticDB
 
   //void Schedule::PopRoot() { }
 
-  void Schedule::CollapseFirstRootBranch()
+  /*OLD: void Schedule::CollapseFirstRootBranch()
   {
     // Pre-condition: The tree should not be empty
     OSI_ASSERT(RootBranches() > 0);
@@ -338,19 +347,57 @@ namespace QSemanticDB
     nRootBranches += Begin()->OuterBranches();
     DeallocQueue(Begin()->queue);
     tree.pop_front();
-  }
+  }*/
 
-  /*void Schedule::CollapseRootBranch(Schedule::TreeIterator iBranch)
+  void Schedule::CollapseRootBranch(Schedule::TreeIterator iBranch)
   {
     // Pre-condition: The tree should not be empty
-    OSI_ASSERT(!Empty());
+    // But this only tests if the root is empty: OSI_ASSERT(!Empty());
+    OSI_ASSERT(RootBranches() > 1 || iBranch->TotalBranches() > 0);
+    
+    // Get the first child of the branch
+    auto iChildBranch = iBranch;
+    ++iChildBranch;
+    
+    if(iChildBranch != End())
+    {
+      // If this is not the first root branch, update its previous sibling to
+      // point to this branch's first child (or if it has no children, this will
+      // be its sibling due to the linked list structure)
+      OSI_ASSERT((iBranch->TotalBranches() > 0 && iBranch->iSibling != iChildBranch) || (iBranch->TotalBranches() == 0 && iBranch->iSibling == iChildBranch));
+      if(iBranch != Begin())
+      {
+        // Find the previous branch
+        auto iPrevBranch = Begin();
+        while(iPrevBranch->Sibling() != iBranch)
+        {
+          OSI_ASSERT(iPrevBranch != End());
+          ++iPrevBranch;
+        }
+        // Re-assign the previous branch's sibling
+        iPrevBranch->iSibling = iChildBranch;
+      }
+      
+      // Reassign the last child branch's sibling
+      if(iBranch->TotalBranches() > 0)
+      {
+        auto iLastChild = iChildBranch;
+        while (iChildBranch != End())
+        {
+          iLastChild = iChildBranch;
+          ++iChildBranch;
+        }
+        OSI_ASSERT(iLastChild->Sibling() == End());
+        iLastChild->iSibling = iBranch->Sibling();
+      }
+    }
+    
+    // Remove the root branch from the tree
     nRootBranches -= 1;
-    nRootBranches += iBranch->Branches();
+    nRootBranches += iBranch->TotalBranches();
     DeallocQueue(iBranch->queue);
-    if(iBranch != tree.begin())
-      (iBranch-1)->iSibling = iBranch->Sibling();
     tree.erase(iBranch);
-  }*/
+  }
 
   void Schedule::DeallocQueue(SymbolQueue *queue)
   {

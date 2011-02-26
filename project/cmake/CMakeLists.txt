@@ -39,7 +39,6 @@ else()
   endif()
 endif()
 
-
 # Build
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
