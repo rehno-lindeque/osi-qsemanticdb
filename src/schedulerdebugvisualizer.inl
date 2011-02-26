@@ -42,6 +42,9 @@ namespace QSemanticDB
     printRed = false;
     for(int rootBranchIndex = 0; rootBranchIndex < scheduler.schedule.RootBranches(); ++rootBranchIndex)
     {
+      // Pre-condition: The root branches should correspond with the actual number of siblings linked up
+      OSI_ASSERT(iTree != scheduler.schedule.End());
+      
       // Subgraph
       if(!printRed && iTree == *iEvalStack)
       {
@@ -78,8 +81,6 @@ namespace QSemanticDB
     // Print the evaluation position
     PrintEvalPosition(fileStream);
 
-    // TODO: Write additional info
-     
     // Print the end of the graph
     fileStream << "}" << std::endl;
     
