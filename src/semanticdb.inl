@@ -488,7 +488,8 @@ namespace QSemanticDB
     // OLD: Just because the branch has been committed doesn't mean it can't be expanded further: This is why the old condition below is incorrect)
     // if(schedule.RootBranches() == 1 && schedule.Begin()->Size() == 1)
     // NEW: Check if we've reached the last commit position to see if we should resume evaluation
-    if(schedule.Begin() == scheduler.GetEvalIterator())
+    //      But this isn't done yet, we should also check how many symbols are left in the queue
+    if(schedule.Begin() == scheduler.GetEvalIterator() && scheduler.GetEvalIterator()->Size() == 1)
     {
       // Reset the scheduler
       scheduler.Reset();
