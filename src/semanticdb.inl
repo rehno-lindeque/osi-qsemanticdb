@@ -485,10 +485,17 @@ namespace QSemanticDB
     SemanticId evalId = schedule.Front();
 
     // If the fetched symbol needs to be evaluated internally for the next iteration, then evaluate it
-    if(schedule.RootBranches() == 1 && schedule.Begin()->Size() == 1)
+    // OLD: Just because the branch has been committed doesn't mean it can't be expanded further: This is why the old condition below is incorrect)
+    // if(schedule.RootBranches() == 1 && schedule.Begin()->Size() == 1)
+    // NEW: Check if we've reached the last commit position to see if we should resume evaluation
+    if(schedule.Begin() == scheduler.GetEvalIterator())
     {
       // Reset the scheduler
       scheduler.Reset();
+      QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_After_Reset")
+      //static int i = 0; if (i == 0) { scheduler.Reset(); ++i; }
+      //scheduler.activeQueue.push_back(schedule.Begin());
+      
 
       // Invariant Condition: When the branch only has one symbol and no branches, then Front() (i.e. the next symbol to return to the evaluator) is the same as Back() (i.e. the next symbol to evaluate internally).
       //OSI_ASSERT(schedule.Front() == scheduler.Back());
@@ -500,7 +507,7 @@ namespace QSemanticDB
 
     // Remove the symbol to be returned from the schedule
     //QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_BeforePopFront")
-    if (schedule.Begin()->Size() == 1)
+    if(schedule.Begin()->Size() == 1)
     {
       // If the front of the queue is going to be removed, then the scheduler's 
       // bottom queue also needs to be removed (since it will no longer exist

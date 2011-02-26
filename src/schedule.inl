@@ -270,7 +270,7 @@ namespace QSemanticDB
     if(iTree->Empty() && (RootBranches() > 1 || iTree->TotalBranches() > 0))
     {
       CollapseRootBranch(iTree);    // (If the branch is empty, it should be replaced by its child branches)*/
-    }
+    }    
 
     /*OLD: if(RootBranches() > 0 && iTree->Empty() && iTree->OuterBranches() > 0)
       CollapseFirstRootBranch();*/

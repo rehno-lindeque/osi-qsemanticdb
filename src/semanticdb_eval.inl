@@ -27,7 +27,7 @@ namespace QSemanticDB
     IdPropertiesIterator i = symbolProperties.find(evalId);
 
     // Evaluate simple symbols
-    QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalInternal(" << evalId << ")...")
+    QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalInternal(" << evalId << ")..." << std::endl)
     if(i == symbolProperties.end() || (i->second.query == QueryNone && i->second.concrete))
     {
       QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalInternal_Before_EvalSymbol(" << evalId << ")" << std::endl)
@@ -44,7 +44,7 @@ namespace QSemanticDB
         do
         {
           QSEMANTICDB_DEBUG_VERBOSE_PRINT("EvalIfQuery(" << scheduler.Get() << ')' << std::endl)
-          if (!EvalIfQuery(scheduler.Get()))
+          if(!EvalIfQuery(scheduler.Get()))
           {
             // break;
             //todo: what should be done now?

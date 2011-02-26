@@ -72,6 +72,9 @@ namespace QSemanticDB
     int OuterBranches() const;
     int QueryDepth() const;
     
+    Schedule::TreeIterator GetEvalIterator();
+    Schedule::TreeConstIterator GetEvalIterator() const;
+    
     //// Special operations
     
     // This operation is necessary when the root node of the schedule is
@@ -114,6 +117,7 @@ namespace QSemanticDB
     Schedule& schedule;                           // The schedule tree structure
     SemanticId currentSymbol;                     // The current symbol being evaluated
     QueueStack activeQueue;                       // The stack of active queues (query strings)
+    Schedule::TreeIterator evalIterator;          // The last position of the eval 
     int queryDepth;                               // The number of nested, but unresolved queries in the activeQueue.
     // SemanticId frontSymbol;                    // The current external eval symbol. This value is always equal to schedule.Front() but is cached here for efficiency.
     // SemanticId currentSymbol;                  // The current internal eval symbol (used with queries that require internal evaluation)

@@ -15,6 +15,7 @@ namespace QSemanticDB
   {
     OSI_ASSERT(schedule.Begin() != schedule.End());
     activeQueue.push_back(schedule.Begin());
+    evalIterator = schedule.Begin();
   }
 
   void Scheduler::Push(SemanticId symbol)
@@ -56,7 +57,11 @@ namespace QSemanticDB
         break;
       (**i).Commit();
     }
-
+    
+    // Assign the current iterator to the eval iterator. This is where the 
+    // interpreter will pick up execution again when it resumes.
+    evalIterator = *activeQueue.rbegin();
+    
     // Continue to the next branch in the schedule tree
     GotoNextBranch();
   }
@@ -159,6 +164,7 @@ namespace QSemanticDB
   {
     activeQueue.clear();
     activeQueue.push_back(schedule.Begin());
+    // Perhaps? evalIterator = schedule.Begin();
   }
 
   bool Scheduler::Done() const
@@ -179,6 +185,16 @@ namespace QSemanticDB
   int Scheduler::QueryDepth() const
   {
     return queryDepth;
+  }
+  
+  Schedule::TreeIterator Scheduler::GetEvalIterator()
+  {
+    return evalIterator;
+  }
+  
+  Schedule::TreeConstIterator Scheduler::GetEvalIterator() const
+  {
+    return evalIterator;
   }
   
   void Scheduler::RemoveBottomQueue()

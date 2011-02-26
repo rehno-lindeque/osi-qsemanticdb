@@ -76,6 +76,9 @@ namespace QSemanticDB
 
     // Print the active queue
     PrintActiveQueue(fileStream);
+    
+    // Print the evaluation position
+    PrintEvalPosition(fileStream);
 
     // TODO: Write additional info
 
@@ -292,6 +295,40 @@ namespace QSemanticDB
       fileStream << "</TR>";
     }
     fileStream  << std::endl << "    <TR><TD COLSPAN=\"2\" BGCOLOR=\"lightgrey\">ACTIVE QUEUE</TD></TR>";
+    fileStream  << "</TABLE>" << std::endl
+                << " >];" << std::endl;
+    fileStream  << " }" << std::endl;
+  }
+  
+  void SchedulerDebugVisualizer::PrintEvalPosition(std::ofstream &fileStream)
+  {
+    // Begin the table
+    fileStream  << " subgraph evalPosition {" << std::endl;
+    fileStream  << " evalPosition [shape=none, margin=0, label=<" << std::endl
+                << "   <TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\">" << std::endl;
+                
+    // Print the queue
+    auto iQueue = db.scheduler.GetEvalIterator();
+    fileStream << "    <TR>";
+    if(iQueue == db.schedule.End())
+    {
+      fileStream << "<TD COLSPAN=\"2\">Invalid Iterator</TD>";
+    }
+    else
+    {
+      auto scheduleQueue = *iQueue;
+      fileStream << "<TD>" << scheduleQueue.QueryDepth() << "</TD>";
+      for(size_t c = scheduleQueue.FrontIndex(); c < scheduleQueue.EndIndex(); ++c)
+      {
+        fileStream << "<TD>";
+        InternPrintSymbol(fileStream, scheduleQueue[c]);
+        fileStream << "</TD>";
+      }
+    }
+    fileStream << "</TR>";
+
+    // End the table
+    fileStream  << std::endl << "    <TR><TD COLSPAN=\"2\" BGCOLOR=\"lightgrey\">LAST EVAL POSITION</TD></TR>";
     fileStream  << "</TABLE>" << std::endl
                 << " >];" << std::endl;
     fileStream  << " }" << std::endl;
