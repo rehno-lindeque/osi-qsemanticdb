@@ -27,6 +27,13 @@ namespace QSemanticDB
 
     // Write graph data
     fileStream << "digraph G {" << std::endl;
+    
+    // Write graph title
+    if (description)
+      fileStream << " label = \"" << title << "\\n" << description << "\";" << std::endl;
+    else
+      fileStream << " label = \"" << title << "\";" << std::endl;
+    
     //fileStream << " rankdir=TB;" << std::endl;
     fileStream << " rankdir=LR;" << std::endl;
 
@@ -48,6 +55,7 @@ namespace QSemanticDB
         printRed = false;
       }
       fileStream << " subgraph clusterRootSG" << subgraphCounter << " {" << std::endl;
+      fileStream << "  label=\"\";" << std::endl;
       ++subgraphCounter;
 
       // Queue
@@ -81,13 +89,9 @@ namespace QSemanticDB
     PrintEvalPosition(fileStream);
 
     // TODO: Write additional info
-
-
-    // Write graph title
-    if (description)
-      fileStream << " label = \"" << title << "\\n" << description << "\";" << std::endl << "}" << std::endl;
-    else
-      fileStream << " label = \"" << title << "\";" << std::endl << "}" << std::endl;
+     
+    // Print the end of the graph
+    fileStream << "}" << std::endl;
     
     // Increment the file count
     ++count;
@@ -212,6 +216,7 @@ namespace QSemanticDB
         printRed = false;
       }
       fileStream << " subgraph clusterSG" << subgraphCounter << " {" << std::endl;
+      fileStream << "  label=\"\";" << std::endl;
       ++subgraphCounter;
 
       // Queue
