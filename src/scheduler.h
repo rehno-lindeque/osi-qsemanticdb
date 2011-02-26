@@ -22,7 +22,7 @@ namespace QSemanticDB
 #endif
 
     //// Types
-    typedef std::vector<Schedule::TreeIterator> QueueStack;
+    typedef std::deque<Schedule::TreeIterator> QueueStack;
     typedef QueueStack::iterator QueueStackIterator;
     typedef QueueStack::const_iterator QueueStackConstIterator;
     typedef Schedule::Tree Tree;
@@ -71,6 +71,16 @@ namespace QSemanticDB
     int InnerBranches() const;
     int OuterBranches() const;
     int QueryDepth() const;
+    
+    //// Special operations
+    
+    // This operation is necessary when the root node of the schedule is
+    // collapsed and the children become the new roots...
+    // (Note that this does not pop symbols, it pops the root iterator from the
+    // active queues...)
+    // WARNING: Be aware that this will invalidate all visitors created by the
+    //          scheduler.
+    void RemoveBottomQueue();
 
     //// Accessors
     // Schedule::TreeIterator FirstBranch() { return schedule.Begin(); }

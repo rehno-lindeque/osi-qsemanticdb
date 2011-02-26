@@ -500,6 +500,13 @@ namespace QSemanticDB
 
     // Remove the symbol to be returned from the schedule
     //QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_BeforePopFront")
+    if (schedule.Begin()->Size() == 1)
+    {
+      // If the front of the queue is going to be removed, then the scheduler's 
+      // bottom queue also needs to be removed (since it will no longer exist
+      OSI_ASSERT(scheduler.activeQueue[0] == schedule.Begin());
+      scheduler.RemoveBottomQueue();      
+    }
     schedule.PopFront();
     QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_AfterPopFront")
 

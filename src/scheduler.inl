@@ -180,6 +180,11 @@ namespace QSemanticDB
   {
     return queryDepth;
   }
+  
+  void Scheduler::RemoveBottomQueue()
+  {
+    activeQueue.pop_front();
+  }
 
   Scheduler::Visitor Scheduler::GetVisitor()
   {
