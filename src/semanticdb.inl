@@ -504,8 +504,10 @@ namespace QSemanticDB
     {
       // If the front of the queue is going to be removed, then the scheduler's 
       // bottom queue also needs to be removed (since it will no longer exist
-      OSI_ASSERT(scheduler.activeQueue[0] == schedule.Begin());
-      scheduler.RemoveBottomQueue();      
+      //OSI_ASSERT(scheduler.activeQueue[0] == schedule.Begin());
+      // Note that the active queue is not necessarily the one that's going to be popped however!
+      if (!scheduler.activeQueue.empty() && scheduler.activeQueue[0] == schedule.Begin())
+        scheduler.RemoveBottomQueue();
     }
     schedule.PopFront();
     QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_AfterPopFront")
