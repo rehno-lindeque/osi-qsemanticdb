@@ -166,6 +166,11 @@ namespace QSemanticDB
     activeQueue.push_back(schedule.Begin());
     // Perhaps? evalIterator = schedule.Begin();
   }
+  
+  void Scheduler::ResetEvalIterator()
+  {
+    evalIterator = schedule.Begin();
+  }
 
   bool Scheduler::Done() const
   {

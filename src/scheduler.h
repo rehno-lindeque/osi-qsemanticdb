@@ -67,6 +67,7 @@ namespace QSemanticDB
     //void Pop(); // This operation should not be supported in the scheduler, the scheduler is a "writer" object.
 
     void Reset();
+    void ResetEvalIterator();
     bool Done() const;
     int InnerBranches() const;
     int OuterBranches() const;

@@ -508,6 +508,7 @@ namespace QSemanticDB
 
     // Remove the symbol to be returned from the schedule
     //QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_BeforePopFront")
+    bool resetEvalIterator = false;
     if(schedule.Begin()->Size() == 1)
     {
       // If the front of the queue is going to be removed, then the scheduler's 
@@ -516,8 +517,11 @@ namespace QSemanticDB
       // Note that the active queue is not necessarily the one that's going to be popped however!
       if (!scheduler.activeQueue.empty() && scheduler.activeQueue[0] == schedule.Begin())
         scheduler.RemoveBottomQueue();
+      resetEvalIterator = (scheduler.GetEvalIterator() == schedule.Begin());
     }
     schedule.PopFront();
+    if (resetEvalIterator)
+      scheduler.ResetEvalIterator();
     QSEMANTICDB_DEBUG_VISUALIZE_SCHEDULE("Eval_AfterPopFront")
     
     QSEMANTICDB_DEBUG_VERBOSE_PRINT("Eval result = (" << evalId << ')' << std::endl)
